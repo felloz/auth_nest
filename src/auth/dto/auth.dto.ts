@@ -9,3 +9,12 @@ export class AuthDto {
     @IsNotEmpty()
     password: String;
 }
+
+export interface TokenResponse {
+    access_token: string;
+}
+
+export interface TokenRequest {
+    sub: number;
+    email: string;
+}

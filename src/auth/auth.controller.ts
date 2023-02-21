@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 import { AuthService } from './auth.service';
-import { AuthDto } from './dto';
+import { AuthDto, TokenResponse } from './dto';
 
 @Controller('api/auth')
 export class AuthController {
@@ -15,7 +15,7 @@ export class AuthController {
     }
 
     @Post('signin')
-    signin(@Body() dto: AuthDto): Promise<User> {
+    signin(@Body() dto: AuthDto): Promise<TokenResponse> {
         return this.authService.signin(dto);
     }
 }
