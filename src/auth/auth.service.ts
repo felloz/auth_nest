@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ForbiddenException } from '@nestjs/common/exceptions';
 import { Prisma, User } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 import * as argon from 'argon2';
 import { PrismaService } from '../prisma/prisma.service';
@@ -33,8 +32,6 @@ export class AuthService {
                     throw new ForbiddenException('Usuario registrado');
                 }
             }
-
-            //throw error.constructor.name;
         }
     }
 
@@ -44,13 +41,24 @@ export class AuthService {
                 email: dto.email,
             },
         });
-
-        const isValid = argon.verify(user.password, dto.password.toString());
-
-        if ((await isValid).valueOf()) {
-            delete (await user).password;
-
-            return user;
+        //Valido si existe un usuario
+        if (!user) {
+            throw new ForbiddenException('Bad credentianls');
         }
+
+        //Verifico contraseñas con Argon
+        const isValid = await argon.verify(
+            user.password,
+            dto.password.toString(),
+        );
+
+        //Valido si la respuesta es verdadera
+        if (!isValid) {
+            throw new ForbiddenException('Bad credentials');
+        }
+
+        delete (await user).password;
+
+        return user;
     }
 }

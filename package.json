@@ -6,6 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "comment-db:restart":"el comando db:restart funciona solo para reiniciar la base de datos en docker",
+    "db:stop": "docker compose rm dev-db -s -f -v", 
+    "db:start": "docker compose up dev-db -d",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
